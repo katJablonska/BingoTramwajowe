@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -19,6 +18,33 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.bingo.ui.theme.Screen
+import kotlinx.coroutines.delay
+import com.example.bingo.ui.theme.MpkGreen
+import com.example.bingo.ui.theme.MpkYellow
+
+@Composable
+fun LoadingScreen() {
+    var isLoading by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        delay(3600)
+        isLoading = false
+    }
+
+    if (isLoading) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.LightGray), // Ustawienie koloru tła na lightgray
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LoadingAnimation()
+        }
+    } else {
+        Navigation()
+    }
+}
 
 @Composable
 fun Navigation() {
@@ -41,6 +67,7 @@ fun MainScreen(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.LightGray)
             .padding(100.dp)
     ) {
         Button(
@@ -50,7 +77,7 @@ fun MainScreen(navController: NavController) {
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text(
-                text = "Start the game",
+                text = "Wsiądź do tramwaju!",
                 fontSize = 20.sp
             )
         }
@@ -66,9 +93,9 @@ fun DetailScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.LightGray)
             .padding(16.dp)
     ) {
-        // New game button row
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
@@ -81,7 +108,7 @@ fun DetailScreen(navController: NavController) {
                 },
             ) {
                 Text(
-                    text = "New game",
+                    text = "Nowa gra",
                     fontSize = 20.sp
                 )
             }
@@ -97,7 +124,8 @@ fun DetailScreen(navController: NavController) {
 fun BingoBoard(words: Array<Array<String>>) {
     Column(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(4.dp)
+            .background(Color.LightGray)
     ) {
         for (row in words) {
             Row(
@@ -122,13 +150,15 @@ fun BingoCell(word: String) {
             .size(110.dp)
             .padding(1.dp)
             .border(1.dp, Color.Black)
-            .background(if (isClicked) Color.Red else Color.White)
+            .background(if (isClicked) MpkYellow else Color.White)
             .clickable { isClicked = !isClicked }
     ) {
         Text(
             text = word,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center
+            fontSize = 13.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(3.dp)
         )
     }
 }
@@ -153,11 +183,11 @@ fun generateBingoWords(boardSize: Int): Array<Array<String>> {
         16 to "Głośna rozmowa przez telefon",
         17 to "KONTROLA KASOWNIKÓW",
         18 to "Masz plecak? Zdejmij go!",
-        19 to "Przechodzić przez torowisko...",
+        19 to "Przechodząc przez torowisko...",
         20 to "Ile masz polubień w necie?",
-        21 to "Rozliczasz podatki w Poznaniu? To naprawdę OKEJ!",
+        21 to "Rozliczasz podatki w Poznaniu?",
         22 to "Inaczej kursować będą tramwaje linii...",
-        23 to "Jeśli to możliwe, przesuńmy się do wnętrza pojazdu",
+        23 to "Jeśli to możliwe, przesuńmy się do wnętrza...",
         24 to "Spóźnienie",
         25 to "Wykolejenie",
         26 to "Stłuczka",
