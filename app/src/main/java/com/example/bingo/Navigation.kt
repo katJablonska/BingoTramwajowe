@@ -18,7 +18,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.bingo.ui.theme.Screen
 import kotlinx.coroutines.delay
-import com.example.bingo.ui.theme.MpkYellow
+import nl.dionsegijn.konfetti.compose.KonfettiView
+import nl.dionsegijn.konfetti.core.Party
+import nl.dionsegijn.konfetti.core.Position
+import nl.dionsegijn.konfetti.core.emitter.Emitter
+import java.util.concurrent.TimeUnit
 
 @Composable
 fun LoadingScreen() {
@@ -146,35 +150,54 @@ fun DetailScreen(navController: NavController) {
         }
     }
 }
+
 @Composable
 fun WinningScreen(navController: NavController) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+    val party = Party(
+        speed = 0f,
+        maxSpeed = 30f,
+        damping = 0.9f,
+        spread = 360,
+        colors = listOf(0xfce18a, 0xff726d, 0xf4306d, 0xb48def),
+        position = Position.Relative(0.5, 0.5),
+        emitter = Emitter(duration = 100, TimeUnit.MILLISECONDS).max(100)
+    )
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.LightGray)
-            .padding(16.dp)
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.file),
-            contentDescription = "Winning Image",
-            modifier = Modifier.size(400.dp)
+        KonfettiView(
+            modifier = Modifier.fillMaxSize(),
+            parties = listOf(party)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                navController.navigate(Screen.DetailScreen.route) {
-                    popUpTo(Screen.DetailScreen.route) { inclusive = true }
-                }
-            }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Zagraj ponownie",
-                fontSize = 20.sp
+            Image(
+                painter = painterResource(id = R.drawable.file),
+                contentDescription = "UwU tramwaj",
+                modifier = Modifier.size(400.dp)
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    navController.navigate(Screen.DetailScreen.route) {
+                        popUpTo(Screen.DetailScreen.route) { inclusive = true }
+                    }
+                }
+            ) {
+                Text(
+                    text = "Zagraj ponownie",
+                    fontSize = 20.sp
+                )
+            }
         }
     }
 }
